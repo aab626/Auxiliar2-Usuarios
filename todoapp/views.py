@@ -38,6 +38,7 @@ def tareas(request):  # the index view
 
 from django.http import HttpResponseRedirect
 from todoapp.models import User
+from django.contrib import messages
 
 def register_user(request):
     if request.method == 'GET':
@@ -51,6 +52,7 @@ def register_user(request):
         mail = request.POST['mail']
 
         user = User.objects.create_user(username=nombre, password=contraseña, email=mail, apodo=apodo, pronombre=pronombre)
+        messages.success(request, f'Se ha creado usuario para: {user.username} ({user.apodo}).')
 
         return HttpResponseRedirect('/tareas')
 
@@ -68,6 +70,7 @@ def login_user(request):
         
         if usuario is not None:
             login(request,usuario)
+            messages.success(request, f'Bienvenido {usuario.apodo} !')
             return HttpResponseRedirect('/tareas')
         else:
             return HttpResponseRedirect('/register')
